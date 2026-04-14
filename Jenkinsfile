@@ -233,4 +233,18 @@ pipeline {
             }
         }
     }
+
+    // ✅ CORRECT PLACE
+    post {
+        success {
+            mail to: 'kishore18.trs@gmail.com',
+                 subject: "SUCCESS: ${env.JOB_NAME}",
+                 body: "Build passed ✅ ${env.BUILD_URL}"
+        }
+        failure {
+            mail to: 'kishore18.trs@gmail.com',
+                 subject: "FAILED: ${env.JOB_NAME}",
+                 body: "Build failed ❌ ${env.BUILD_URL}"
+        }
+    }
 }
