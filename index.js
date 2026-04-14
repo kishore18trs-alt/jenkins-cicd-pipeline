@@ -1,8 +1,12 @@
-const http = require('http');
+// built-in module, no extra packages need
+const http = require('http'); 
 
+// Read PORT from environment variable, default to 3000 if not set
 const PORT = process.env.PORT || 3000;
-//PORT is set by Jenkins when running in the pipeline, but defaults to 3000 for local testing
 
+
+
+// Create an HTTP server that responds with a JSON object
 const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
@@ -12,6 +16,7 @@ const server = http.createServer((req, res) => {
     }));
 });
 
+// Start the server
 server.listen(PORT, () => {
     console.log(`App running on port ${PORT}`);
 });
