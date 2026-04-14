@@ -232,6 +232,15 @@ pipeline {
                 sh 'npm test || echo "No tests found"'
             }
         }
+        stage('Deploy') {
+          steps {
+           echo "Starting app..."
+           sh '''
+           pkill node || true
+           nohup node index.js > app.log 2>&1 &
+           '''
+            }
+        }
     }
 
     // ✅ CORRECT PLACE
