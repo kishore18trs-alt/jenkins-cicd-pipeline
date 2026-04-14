@@ -1,0 +1,22 @@
+{
+  "name": "jenkins-task",
+  "version": "1.0.0",
+  "description": "Sample app for Jenkins CI/CD pipeline demo",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "node app/index.js",
+    "test": "node test/app.test.js",
+    "lint": "echo lint skipped"
+  },
+  "keywords": [
+    "cicd",
+    "jenkins",
+    "demo"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
+}

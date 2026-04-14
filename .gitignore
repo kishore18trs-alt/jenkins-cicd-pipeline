@@ -1,0 +1,28 @@
+# Node dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables (if you add later)
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code / IDE
+.vscode/
+.idea/
+
+# Test coverage
+coverage/
+
+# Build folders (future use)
+dist/
+build/
+
+# Jenkins temp (optional)
+.jenkins/
