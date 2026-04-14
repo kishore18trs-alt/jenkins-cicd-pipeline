@@ -205,19 +205,75 @@
 //     }
 // }
 
+// pipeline {
+//     agent any
+
+//     tools {
+//         nodejs 'node-20'
+//     }
+
+//     stages {
+
+//         stage('Checkout') {
+//             steps {
+//                 echo "Checked out branch: ${env.BRANCH_NAME ?: 'main'}"
+//             }
+//         }
+
+//         stage('Build') {
+//             steps {
+//                 sh 'npm install'
+//             }
+//         }
+
+//         stage('Test') {
+//             steps {
+//                 sh 'npm test || echo "No tests found"'
+//             }
+//         }
+
+//         stage('Deploy') {
+//             steps {
+//                 echo "Deploying app as Docker container..."
+//                 sh '''
+//                     docker stop node-app || true
+//                     docker rm node-app || true
+//                     docker build -t node-app .
+//                     docker run -d \
+//                         --name node-app \
+//                         -p 3000:3000 \
+//                         --restart always \
+//                         node-app
+//                     sleep 2
+//                     curl -f http://localhost:3000 && echo "App is UP"
+//                 '''
+//             }
+//         }
+//     }
+
+//     post {
+//         success {
+//             mail to: 'kishore18.trs@gmail.com',
+//                  subject: "SUCCESS: ${env.JOB_NAME}",
+//                  body: "Build passed ✅ ${env.BUILD_URL}"
+//         }
+//         failure {
+//             mail to: 'kishore18.trs@gmail.com',
+//                  subject: "FAILED: ${env.JOB_NAME}",
+//                  body: "Build failed ❌ ${env.BUILD_URL}"
+//         }
+//     }
+// }
+
+
 pipeline {
     agent any
 
-    tools {
-        nodejs 'node-20'
-    }
-
     stages {
 
-        stage('Check Node') {
+        stage('Checkout') {
             steps {
-                sh 'node -v'
-                sh 'npm -v'
+                git 'https://github.com/kishore18trs-alt/jenkins-cicd-pipeline.git'
             }
         }
 
@@ -229,21 +285,27 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'npm test || echo "No tests found"'
+                sh 'npm test'
             }
         }
+
         stage('Deploy') {
-          steps {
-           echo "Starting app..."
-           sh '''
-           pkill node || true
-           nohup node index.js > app.log 2>&1 &
-           '''
+            steps {
+                sh 'docker stop node-app || true'
+                sh 'docker rm node-app || true'
+                sh 'docker build -t node-app .'
+                sh 'docker run -d -p 3000:3000 --name node-app node-app'
+                sh 'docker ps'
+            }
+        }
+
+        stage('Notify') {
+            steps {
+                echo "Pipeline completed successfully 🎉"
             }
         }
     }
 
-    // ✅ CORRECT PLACE
     post {
         success {
             mail to: 'kishore18.trs@gmail.com',
