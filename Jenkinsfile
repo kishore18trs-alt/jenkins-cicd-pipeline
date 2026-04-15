@@ -32,11 +32,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    docker stop node-app || true
-                    docker rm node-app || true
-                    docker build -t node-app .
-                    docker run -d -p 3000:3000 --name node-app node-app
-                    sleep 3
+                    npm install -g pm2
+                    pm2 stop node-app || true
+                    pm2 start app.js --name node-app
                     curl -f http://localhost:3000
                 '''
             }
