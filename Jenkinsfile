@@ -34,7 +34,10 @@ pipeline {
                 sh '''
                     npm install -g pm2
                     pm2 stop node-app || true
-                    pm2 start app.js --name node-app
+                    pm2 delete node-app || true
+                    pm2 start index.js --name node-app
+                    sleep 3
+                    
                     curl -f http://localhost:3000
                 '''
             }
