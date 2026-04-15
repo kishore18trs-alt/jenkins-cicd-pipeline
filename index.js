@@ -1,5 +1,5 @@
 const express = require("express");
-const logger = require("./logger");
+const logger = require("./logger"); // Import the logger
 
 const app = express();
 app.use(express.json());
