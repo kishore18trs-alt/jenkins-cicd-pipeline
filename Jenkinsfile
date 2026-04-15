@@ -266,8 +266,69 @@
 // }
 
 
+// pipeline {
+//     agent any
+
+//     stages {
+
+//         stage('Checkout') {
+//             steps {
+//                 git 'https://github.com/kishore18trs-alt/jenkins-cicd-pipeline.git'
+//             }
+//         }
+
+//         stage('Build') {
+//             steps {
+//                 sh 'npm install'
+//             }
+//         }
+
+//         stage('Test') {
+//             steps {
+//                 sh 'npm test'
+//             }
+//         }
+
+//         stage('Deploy') {
+//             steps {
+//                 sh 'docker stop node-app || true'
+//                 sh 'docker rm node-app || true'
+//                 sh 'docker build -t node-app .'
+//                 sh 'docker run -d -p 3000:3000 --name node-app node-app'
+//                 sh 'docker ps'
+//             }
+//         }
+
+//         stage('Notify') {
+//             steps {
+//                 echo "Pipeline completed successfully 🎉"
+//             }
+//         }
+//     }
+
+//     post {
+//         success {
+//             mail to: 'kishore18.trs@gmail.com',
+//                  subject: "SUCCESS: ${env.JOB_NAME}",
+//                  body: "Build passed ✅ ${env.BUILD_URL}"
+//         }
+//         failure {
+//             mail to: 'kishore18.trs@gmail.com',
+//                  subject: "FAILED: ${env.JOB_NAME}",
+//                  body: "Build failed ❌ ${env.BUILD_URL}"
+//         }
+//     }
+// }
+
+
+
+
 pipeline {
     agent any
+
+    tools {
+        nodejs 'NodeJS-20'   // Must match the name set in Jenkins → Global Tool Config
+    }
 
     stages {
 
@@ -291,11 +352,14 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'docker stop node-app || true'
-                sh 'docker rm node-app || true'
-                sh 'docker build -t node-app .'
-                sh 'docker run -d -p 3000:3000 --name node-app node-app'
-                sh 'docker ps'
+                sh '''
+                    docker stop node-app || true
+                    docker rm node-app || true
+                    docker build -t node-app .
+                    docker run -d -p 3000:3000 --name node-app node-app
+                    sleep 3
+                    curl -f http://localhost:3000
+                '''
             }
         }
 

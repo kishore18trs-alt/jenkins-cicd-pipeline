@@ -5,18 +5,16 @@
   "main": "app/index.js",
   "scripts": {
     "start": "node app/index.js",
-    "test": "node test/app.test.js",
+    "test": "jest",
     "lint": "echo lint skipped"
   },
-  "keywords": [
-    "cicd",
-    "jenkins",
-    "demo"
-  ],
-  "author": "",
-  "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "jest": "^30.3.0"
+    "jest": "^30.3.0",
+    "supertest": "^7.0.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "winston": "^3.19.0"
   }
 }

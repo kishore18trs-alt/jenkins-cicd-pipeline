@@ -1,24 +1,46 @@
-// built-in module, no extra packages need
-const http = require('http'); 
+const express = require("express");
+const logger = require("./logger");
 
-// Read PORT from environment variable, default to 3000 if not set
-const PORT = process.env.PORT || 3000;
+const app = express();
+app.use(express.json());
 
-
-
-// Create an HTTP server that responds with a JSON object
-const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({
-        status: 'ok',
-        message: 'Hello from my CI/CD pipeline!',
-        timestamp: new Date().toISOString()
-    }));
+app.get("/", (req, res) => {
+  logger.info("Home API called");
+  res.send("Hello");
 });
 
-// Start the server
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`App running on port ${PORT}`);
+app.post("/login", (req, res) => {
+  const { username } = req.body;
+  logger.info("Login attempt", { user: username });
+
+  if (username === "admin") {
+    logger.info("Login success", { user: username });
+    res.json({ message: "success" });
+  } else {
+    logger.error("Login failed", { user: username });
+    res.status(401).json({ message: "failed" });
+  }
 });
 
-module.exports = server;
+app.post("/register", (req, res) => {
+  const { username, email } = req.body;
+  logger.info("Register attempt", { user: username, email });
+
+  if (!username || !email) {
+    logger.warn("Registration missing fields", { user: username, email });
+    return res.status(400).json({ message: "missing fields" });
+  }
+
+  logger.info("User registered successfully", { user: username, email });
+  res.json({ message: "registered" });
+});
+
+app.delete("/user/:id", (req, res) => {
+  const { id } = req.params;
+  logger.warn("User deletion requested", { userId: id });
+  res.json({ message: `user ${id} deleted` });
+});
+
+app.listen(3000, () => {
+  logger.info("Server started");
+});
