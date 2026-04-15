@@ -30,18 +30,27 @@ pipeline {
         }
 
         stage('Deploy') {
-            steps {
-                sh '''
-                    npm install -g pm2
-                    pm2 stop node-app || true
-                    pm2 delete node-app || true
-                    pm2 start index.js --name node-app
-                    sleep 3
-                    
-                    curl -f http://localhost:3000
-                '''
-            }
-        }
+    steps {
+        sh '''
+            npm install -g pm2
+
+            pm2 stop node-app || true
+            pm2 delete node-app || true
+
+            pm2 start index.js --name node-app
+
+            sleep 5
+
+            pm2 logs node-app --lines 20
+
+            for i in {1..5}; do
+              curl -f http://localhost:3000 && break
+              echo "Retrying..."
+              sleep 3
+            done
+        '''
+    }
+}
 
         stage('Notify') {
             steps {
